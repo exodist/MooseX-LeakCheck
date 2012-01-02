@@ -42,8 +42,8 @@ ATTRIBUTE PROPERTIES
         a warning when a leak is detected. Alternatively you may provide a
         coderef callback to run when a leak is detected.
 
-        The coderef gets the following args: "( $self, $attr_name,
-        \$self-"{$attr_name})>
+        The coderef gets the following args: ( $self, $attr_name,
+        \$self->{$attr_name})
 
 AUTHORS
     Chad Granum exodist7@gmail.com

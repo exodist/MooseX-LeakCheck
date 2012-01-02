@@ -118,7 +118,7 @@ when a leak is detected. Alternatively you may provide a coderef callback to
 run when a leak is detected.
 
 The coderef gets the following args:
-C<( $self, $attr_name, \$self->{$attr_name})>
+( $self, $attr_name, \$self->{$attr_name})
 
 =back
 
