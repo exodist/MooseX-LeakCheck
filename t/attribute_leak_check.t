@@ -36,6 +36,9 @@ use Scalar::Util qw/weaken/;
         default => sub {[]},
         leak_check => 0,
     );
+
+    no Moose;
+    __PACKAGE__->meta->make_immutable;
 }
 
 is( (grep { $_->leak_check } Foo->meta->get_all_attributes), 2, "Found the attrs" );

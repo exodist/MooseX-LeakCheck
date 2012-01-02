@@ -3,7 +3,7 @@ use Moose ();
 use Moose::Exporter;
 use Scalar::Util ();
 
-our $VERSION = '0.001';
+our $VERSION = '0.002';
 
 {
     package MooseX::LeakCheck::Meta::Attribute;
@@ -18,7 +18,9 @@ our $VERSION = '0.001';
     use Moose::Role;
     use Moose::Util::TypeConstraints;
 
-    after DESTROY => sub {
+    sub DEMOLISH {};
+
+    after DEMOLISH => sub {
         my $self = shift;
         my $meta = $self->meta;
         return unless $meta;
