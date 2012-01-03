@@ -2,56 +2,19 @@ package MooseX::LeakCheck;
 use Moose ();
 use Moose::Exporter;
 use Scalar::Util ();
+use MooseX::LeakCheck::Attribute;
+use MooseX::LeakCheck::Base;
 
-our $VERSION = '0.002';
-
-{
-    package MooseX::LeakCheck::Meta::Attribute;
-    use Moose::Role;
-    use Moose::Util::TypeConstraints;
-
-    has leak_check => (
-        is => 'ro',
-    );
-
-    package MooseX::LeakCheck::Meta::Base;
-    use Moose::Role;
-    use Moose::Util::TypeConstraints;
-
-    sub DEMOLISH {};
-
-    after DEMOLISH => sub {
-        my $self = shift;
-        my $meta = $self->meta;
-        return unless $meta;
-
-        for my $attr ( $meta->get_all_attributes ) {
-            next unless my $check = $attr->{leak_check};
-            my $name = $attr->name;
-
-            Scalar::Util::weaken $self->{$name};
-            next unless $self->{$name};
-
-            if ( ref $check && Scalar::Util::reftype $check eq 'CODE' ) {
-                $self->$check( $name, \($self->{$name}) );
-            }
-            else {
-                warn "External ref to attribute '$name' detected on instance '$self'";
-            }
-        }
-    };
-}
+our $VERSION = '0.003';
 
 my ( $import, $unimport, $init_meta ) = Moose::Exporter->build_import_methods(
     also    => ['Moose'],
     install => [qw(import unimport)],
-    #
 
-    #attribute_metaclass_roles => ['MooseX::LeakCheck::Meta::Attribute'],
     class_metaroles => {
-        attribute  => ['MooseX::LeakCheck::Meta::Attribute'],
+        attribute  => ['MooseX::LeakCheck::Attribute'],
     },
-    base_class_roles => ['MooseX::LeakCheck::Meta::Base'],
+    base_class_roles => ['MooseX::LeakCheck::Base'],
 );
 
 sub init_meta {
